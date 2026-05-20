@@ -163,7 +163,7 @@ int lsh_export(char **args)
 {
   if (args[1] == NULL)
   {
-    printf("YOU should type an environment to export in this format {NAMR=VALUE}.\n");
+    printf("YOU should type an environment to export in this format {NAME=VALUE}.\n");
     return 1;
   }
   char *s = args[1];
@@ -367,6 +367,8 @@ char *lsh_read_line(void)
   }
 #endif
 }
+
+int ;
 
 #define LSH_TOK_BUFSIZE 64
 #define LSH_TOK_DELIM " \t\r\n\a"
