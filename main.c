@@ -96,7 +96,7 @@ int lsh_pwd(char **args)
   char cwd[1024];
   if (getcwd(cwd, sizeof(cwd)) != NULL && args[1] == NULL)
   {
-    printf("YOUR CWD is :");
+    printf("YOUR CWD IS :");
     printf("%s\n", cwd);
     return 1;
   }
@@ -197,13 +197,20 @@ int lsh_unset(char **args)
   if (args[1] != NULL)
   {
     char *s = args[1];
-    if(unsetenv(s) == 0)
+    if (getenv(s) == NULL)
+    {
+      printf("lsh: unset: '%s' not found\n", s);
+      return 1;
+    }
+
+    if (unsetenv(s) == 0)
       printf("REMOVED SUCCESSFULLY!\n");
-    else 
+    else
       perror("unsetenv");
     return 1;
   }
   printf("YOU should insert a VAR to REMOVE like {NAME}.\n");
+  return 1;
 }
 /**
    @brief Builtin command: print help.
@@ -430,11 +437,12 @@ void lsh_loop(void)
     {
       free(history[history_count % HISTORY_SIZE]);
       history[history_count % HISTORY_SIZE] = strdup(line);
-      history_count++;
     }
     args = lsh_split_line(line);
     status = lsh_execute(args);
 
+    if (args[0] != NULL)
+      history_count++;
 
     free(line);
     free(args);
