@@ -197,8 +197,10 @@ int lsh_unset(char **args)
   if (args[1] != NULL)
   {
     char *s = args[1];
-    unsetenv(s);
-    printf("REMOVED SUCCESSFULLY!\n");
+    if(unsetenv(s) == 0)
+      printf("REMOVED SUCCESSFULLY!\n");
+    else 
+      perror("unsetenv");
     return 1;
   }
   printf("YOU should insert a VAR to REMOVE like {NAME}.\n");
@@ -428,12 +430,11 @@ void lsh_loop(void)
     {
       free(history[history_count % HISTORY_SIZE]);
       history[history_count % HISTORY_SIZE] = strdup(line);
+      history_count++;
     }
     args = lsh_split_line(line);
     status = lsh_execute(args);
 
-    if (args[0] != NULL)
-      history_count++;
 
     free(line);
     free(args);
